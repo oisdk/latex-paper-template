@@ -1,0 +1,71 @@
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{turnstile}
+\usepackage{bbm}
+\usepackage[greek, english]{babel}
+\usepackage{stmaryrd}
+\usepackage{csquotes}
+\newcommand\doubleplus{+\kern-1.3ex+\kern0.8ex}
+\newcommand\mdoubleplus{\ensuremath{\mathbin{+\mkern-8mu+}}}
+\makeatletter
+\newcommand\incircbin
+{%
+  \mathpalette\@incircbin
+}
+\newcommand\@incircbin[2]
+{%
+  \mathbin%
+  {%
+    \ooalign{\hidewidth$#1#2$\hidewidth\crcr$#1\bigcirc$}%
+  }%
+}
+\newcommand{\oeq}{\ensuremath{\incircbin{=}}}
+\makeatother
+\makeatletter
+\newcommand\insquarebin
+{%
+  \mathpalette\@insquarebin
+}
+\newcommand\@insquarebin[2]
+{%
+  \mathbin%
+  {%
+    \ooalign{\hidewidth$#1#2$\hidewidth\crcr$#1\bigbox$}%
+  }%
+}
+\newcommand{\sqtri}{\ensuremath{\insquarebin{\triangle}}}
+\makeatother
+\newcommand{\circeps}{\ensuremath{\insquarebin{\epsilon}}}
+\makeatother
+\usepackage{ucs}
+\DeclareUnicodeCharacter{951}{\textgreek{\texteta}}
+\DeclareUnicodeCharacter{957}{\textgreek{\textnu}}
+\DeclareUnicodeCharacter{961}{\textgreek{\textrho}}
+\DeclareUnicodeCharacter{929}{\textgreek{\textRho}}
+\DeclareUnicodeCharacter{954}{\textgreek{\textkappa}}
+\DeclareUnicodeCharacter{928}{\textgreek{\textPi}}
+\DeclareUnicodeCharacter{922}{\textgreek{\textKappa}}
+\DeclareUnicodeCharacter{931}{\textgreek{\textSigma}}
+\DeclareUnicodeCharacter{916}{\textgreek{\textDelta}}
+\DeclareUnicodeCharacter{921}{\textgreek{\textIota}}
+\DeclareUnicodeCharacter{8759}{\ensuremath{\dblcolon}}
+\DeclareUnicodeCharacter{737}{\ensuremath{^\text{l}}}
+\DeclareUnicodeCharacter{691}{\ensuremath{^\text{r}}}
+\DeclareUnicodeCharacter{7523}{\ensuremath{_\text{r}}}
+\DeclareUnicodeCharacter{8343}{\ensuremath{_\text{l}}}
+\DeclareUnicodeCharacter{8718}{\ensuremath{\blacksquare}}
+\DeclareUnicodeCharacter{10214}{\ensuremath{\llbracket}}
+\DeclareUnicodeCharacter{10215}{\ensuremath{\rrbracket}}
+\DeclareUnicodeCharacter{8857}{\ensuremath{\odot}}
+\DeclareUnicodeCharacter{8860}{\oeq}
+\DeclareUnicodeCharacter{9043}{\ensuremath{\sqtri}}
+\DeclareUnicodeCharacter{3870}{\ensuremath{\cong}}
+\DeclareUnicodeCharacter{8799}{\ensuremath{\stackrel{?}{=}}}
+\DeclareUnicodeCharacter{10181}{\ensuremath{\lbag}}
+\DeclareUnicodeCharacter{10182}{\ensuremath{\rbag}}
+\DeclareUnicodeCharacter{8760}{\ensuremath{-}}
+\DeclareUnicodeCharacter{9428}{\ensuremath{\textcircled{ε}}}
+\usepackage[references]{agda}
+
+\newcommand{\Nat}{\AgdaDatatype{ℕ}}
+\newcommand{\Int}{\AgdaDatatype{ℤ}}

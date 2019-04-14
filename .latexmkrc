@@ -5,7 +5,3 @@ sub lagda2tex {
     my $base = shift @_;
     return system("bash ./agda-from-toplevel.sh $base.lagda");
 }
-
-$pdflatex = "xelatex %O %S";
-$pdf_mode = 5;
-$dvi_mode = $postscript_mode = 0;
