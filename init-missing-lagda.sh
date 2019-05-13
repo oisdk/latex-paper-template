@@ -1,5 +1,5 @@
 #!/bin/bash
-cd code || exit
+cd agda || exit
 find . -type f -name '*.lagda' | while read -r code ; do
     dir=$(dirname "$code")
     file=$(basename "$code" .lagda).tex
