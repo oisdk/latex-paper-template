@@ -1,5 +1,5 @@
 #!/bin/bash
 withcode=$1
-nocode=${withcode#"code/"}
-cd code || exit
+nocode=${withcode#"agda/"}
+cd agda || exit
 agda --latex --latex-dir=. "$nocode"

@@ -6,8 +6,17 @@
 \usepackage[greek, english]{babel}
 \usepackage{stmaryrd}
 \usepackage{csquotes}
+\usepackage{latexsym}
 \newcommand\doubleplus{+\kern-1.3ex+\kern0.8ex}
 \newcommand\mdoubleplus{\ensuremath{\mathbin{+\mkern-8mu+}}}
+\usepackage[dvipsnames]{xcolor}
+\newcommand\doublelbrace{%
+  {\{\mkern-4mu\lvert}%
+}
+\newcommand\doublerbrace{%
+  {\rvert\mkern-4mu\}}%
+}
+
 \makeatletter
 \newcommand\incircbin
 {%
@@ -39,6 +48,7 @@
 \newcommand{\circeps}{\ensuremath{\insquarebin{\epsilon}}}
 \makeatother
 \usepackage{ucs}
+\DeclareUnicodeCharacter{8605}{\ensuremath{\leadsto}}
 \DeclareUnicodeCharacter{951}{\textgreek{\texteta}}
 \DeclareUnicodeCharacter{957}{\textgreek{\textnu}}
 \DeclareUnicodeCharacter{961}{\textgreek{\textrho}}
@@ -67,7 +77,28 @@
 \DeclareUnicodeCharacter{8760}{\ensuremath{-}}
 \DeclareUnicodeCharacter{9428}{\ensuremath{\textcircled{ε}}}
 \DeclareUnicodeCharacter{8623}{\ensuremath{\lightning}}
+\DeclareUnicodeCharacter{10627}{\ensuremath{\doublelbrace}}
+\DeclareUnicodeCharacter{10628}{\ensuremath{\doublerbrace}}
+\DeclareUnicodeCharacter{10631}{\ensuremath{\llparenthesis}}
+\DeclareUnicodeCharacter{10632}{\ensuremath{\rrparenthesis}}
+% \DeclareUnicodeCharacter{8859}{\ensuremath{\textcircled{\(\star\)}}}
+% \DeclareUnicodeCharacter{8727}{\ensuremath{^\ast}}
+\DeclareUnicodeCharacter{9666}{\ensuremath{\scriptscriptstyle\blacktriangleleft}}
+\DeclareUnicodeCharacter{8855}{\ensuremath{\otimes}}
+
 \usepackage[references]{agda}
 
 \newcommand{\Nat}{\AgdaDatatype{ℕ}}
 \newcommand{\Int}{\AgdaDatatype{ℤ}}
+\colorlet{AgdaKeyword}{BlueViolet}
+\colorlet{AgdaFunction}{OliveGreen}
+\colorlet{AgdaDatatype}{OliveGreen}
+\colorlet{AgdaPostulate}{OliveGreen}
+\colorlet{AgdaPrimitive}{OliveGreen}
+\colorlet{AgdaRecord}{OliveGreen}
+\colorlet{AgdaRecordtype}{OliveGreen}
+\colorlet{AgdaPrimitiveType}{OliveGreen}
+\colorlet{AgdaModule}{OliveGreen}
+\colorlet{AgdaInductiveConstructor}{Sepia}
+\colorlet{AgdaField}{Sepia}
+\renewcommand{\AgdaKeywordFontStyle}[1]{\textbf{#1}}
