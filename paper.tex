@@ -1,10 +1,16 @@
 \documentclass{article}
-\usepackage[T1]{fontenc}
-\usepackage[references]{agda}
 \usepackage{catchfilebetweentags}
-\input{unicode}
-\begin{document}
-abc
+\input{agda}
+\usepackage{locallhs2TeX}
+\renewcommand{\Varid}[1]{\mathit{#1}}
+\renewcommand{\Conid}[1]{\textcolor{OliveGreen}{\textsf{#1}}}
+\usepackage[mono=false]{libertine}
 
-\ExecuteMetaData[code/Example.tex]{example}
+\usepackage[displaymath,textmath]{preview}
+\let\oldhscode\hscode
+\def\hscode{\nopreview\oldhscode}
+
+\begin{document}
+\ExecuteMetaData[agda/Example.tex]{example}
+\ExecuteMetaData[haskell/Example.tex]{example}
 \end{document}
