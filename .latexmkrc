@@ -10,5 +10,5 @@ sub lagda2tex {
 
 sub lhs2tex {
     my $base = shift @_;
-    return system("lhs2TeX", "-o", "$base.tex", "$base.lhs");
+    return system("bash ./haskell-from-toplevel.sh $base.lhs");
 }
