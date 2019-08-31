@@ -243,11 +243,13 @@ TSWLatexianTemp*
 
 # agda
 *.agdai
-agda/*.tex
+agda/**/*.tex
 agda/agda.sty
 *.ptb
 
 # haskell
-haskell/*.tex
+haskell/**/*.tex
 *.hi
 *.o
+
+.DS_Store
