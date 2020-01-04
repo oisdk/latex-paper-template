@@ -5,11 +5,11 @@
 \usepackage{bbm}
 \usepackage[greek, english]{babel}
 \usepackage{stmaryrd}
-\usepackage{csquotes}
 \usepackage{latexsym}
 \newcommand\doubleplus{+\kern-1.3ex+\kern0.8ex}
 \newcommand\mdoubleplus{\ensuremath{\mathbin{+\mkern-8mu+}}}
 \usepackage[dvipsnames]{xcolor}
+\usepackage{relsize}
 \newcommand\doublelbrace{%
   {\{\mkern-4mu\lvert}%
 }
@@ -47,6 +47,10 @@
 \makeatother
 \newcommand{\circeps}{\ensuremath{\insquarebin{\epsilon}}}
 \makeatother
+\newcommand{\qeq}{\mathrel{\mathpalette\qeqf\relax}}
+\newcommand{\qeqf}[2]{%
+  \ooalign{$#1=$\cr
+    \hidewidth\raisebox{1ex}{$#1\mkern0mu{\mathsmaller{\mathsmaller{?}}}$}\hidewidth\cr}}
 \usepackage{ucs}
 \DeclareUnicodeCharacter{8605}{\ensuremath{\leadsto}}
 \DeclareUnicodeCharacter{951}{\textgreek{\texteta}}
@@ -71,7 +75,7 @@
 \DeclareUnicodeCharacter{8860}{\oeq}
 \DeclareUnicodeCharacter{9043}{\ensuremath{\sqtri}}
 \DeclareUnicodeCharacter{3870}{\ensuremath{\cong}}
-\DeclareUnicodeCharacter{8799}{\ensuremath{\stackrel{?}{=}}}
+\DeclareUnicodeCharacter{8799}{\ensuremath{\qeq}}
 \DeclareUnicodeCharacter{10181}{\ensuremath{\lbag}}
 \DeclareUnicodeCharacter{10182}{\ensuremath{\rbag}}
 \DeclareUnicodeCharacter{8760}{\ensuremath{-}}
@@ -83,7 +87,29 @@
 \DeclareUnicodeCharacter{10632}{\ensuremath{\rrparenthesis}}
 \DeclareUnicodeCharacter{9666}{\ensuremath{\scriptscriptstyle\blacktriangleleft}}
 \DeclareUnicodeCharacter{8855}{\ensuremath{\otimes}}
-
+\DeclareUnicodeCharacter{894}{\ensuremath{\fatsemi}}
+\DeclareUnicodeCharacter{65373}{\ensuremath{\}}}
+\DeclareUnicodeCharacter{65371}{\ensuremath{\{}}
+\DeclareUnicodeCharacter{120021}{\ensuremath{\mathcal{F}}}
+\DeclareUnicodeCharacter{120017}{\ensuremath{\mathcal{B}}}
+\DeclareUnicodeCharacter{8761}{\ensuremath{\coloneq}}
+\DeclareUnicodeCharacter{8788}{\ensuremath{\mathrel{\mathop:}=}}
+\DeclareUnicodeCharacter{119974}{\ensuremath{\mathcal{K}}}
+\DeclareUnicodeCharacter{8492}{\ensuremath{\mathcal{B}}}
+\DeclareUnicodeCharacter{8495}{\ensuremath{\mathcal{E}}}
+\DeclareUnicodeCharacter{8466}{\ensuremath{\mathcal{L}}}
+\DeclareUnicodeCharacter{8779}{\ensuremath{\approxeq}}
+\DeclareUnicodeCharacter{10626}{\ensuremath{:}}
+\DeclareUnicodeCharacter{10629}{\ensuremath{\llparenthesis}}
+\DeclareUnicodeCharacter{10630}{\ensuremath{\rrparenthesis}}
+\DeclareUnicodeCharacter{9671}{\ensuremath{\Diamond}}
+\DeclareUnicodeCharacter{9723}{\ensuremath{\Box}}
+\DeclareUnicodeCharacter{9655}{\ensuremath{\triangleright}}
+\DeclareUnicodeCharacter{7584}{\ensuremath{^\text{f}}}
+\DeclareUnicodeCharacter{8346}{\ensuremath{_\text{p}}}
+\DeclareUnicodeCharacter{8621}{\ensuremath{\leftrightsquigarrow}}
+\DeclareUnicodeCharacter{12310}{\ensuremath{\lbparen}}
+\DeclareUnicodeCharacter{12311}{\ensuremath{\rbparen}}
 \usepackage[references]{agda}
 
 \newcommand{\Nat}{\AgdaDatatype{ℕ}}
@@ -100,3 +126,4 @@
 \colorlet{AgdaInductiveConstructor}{Sepia}
 \colorlet{AgdaField}{Sepia}
 \renewcommand{\AgdaKeywordFontStyle}[1]{\textbf{#1}}
+\usepackage{csquotes}
