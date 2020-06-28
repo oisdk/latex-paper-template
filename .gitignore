@@ -253,3 +253,5 @@ haskell/**/*.tex
 *.o
 
 .DS_Store
+locallhs2TeX.lhs
+locallhs2TeX.sty

@@ -13,6 +13,6 @@ find haskell -type f -name '*.lhs' | while read -r code ; do
     file="$dir"/$(basename "$code" .lhs).tex
     if [ ! -e "$file" ]
     then
-        ./haskell-from-toplevel.sh "$code"
+        ./scripts/haskell-from-toplevel.sh "$code"
     fi
 done
