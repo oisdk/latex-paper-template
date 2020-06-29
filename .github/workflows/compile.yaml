@@ -99,7 +99,7 @@ jobs:
         mkdir -p ~/.agda/
         touch ~/.agda/libraries
         echo "$GITHUB_WORKSPACE/cubical/cubical.agda-lib" > ~/.agda/libraries
-       echo "$GITHUB_WORKSPACE/agda-stdlib/standard-library.agda-lib" >> ~/.agda/libraries
+        echo "$GITHUB_WORKSPACE/agda-stdlib/standard-library.agda-lib" >> ~/.agda/libraries
 
     - name: Compile Agda standard library
       if: steps.cache-agda-stdlib.outputs.cache-hit != 'true'
