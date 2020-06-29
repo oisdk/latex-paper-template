@@ -130,8 +130,14 @@ jobs:
       run: |
         mkdir -p cubical/_build
         cp -f -r ~/cubical-build/* cubical/_build
+        
+# Download this git repo
+    - name: Checkout main
+      uses: actions/checkout@v2
+      with:
+        path: main
 
-# Haskell LaTeX
+# Compile Haskell
     - uses: actions/cache@v2
       name: Cache literate Haskell
       id: cache-lhs
@@ -164,26 +170,22 @@ jobs:
       if: steps.cache-lhs.outputs.cache-hit == 'true'
       run: cp -f -R ~/lhs-build/* $GITHUB_WORKSPACE/main/haskell
 
-# Download and compile main library
-    - name: Checkout main
-      uses: actions/checkout@v2
-      with:
-        path: main
+# Compile Agda
 
     - uses: actions/cache@v2
-      name: Cache main library
-      id: cache-main
+      name: Cache agda code
+      id: cache-agda
       with:
         path: ~/main-build
         key: html-and-tex-${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.agda-stdlib-ref }}-${{ matrix.cubical-ref }}-${{ hashFiles('main/agda/**') }}
         restore-keys: html-and-tex-${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.agda-stdlib-ref }}-${{ matrix.cubical-ref }}-
 
     - name: Retrieve main library
-      if: steps.cache-main.outputs.cache-hit == 'true'
+      if: steps.cache-agda.outputs.cache-hit == 'true'
       run: cp -f -R ~/main-build/* $GITHUB_WORKSPACE/main/agda
 
     - name: Compile main library
-      if: steps.cache-main.outputs.cache-hit != 'true'
+      if: steps.cache-agda.outputs.cache-hit != 'true'
       run: |
         mkdir -p ~/main-build/_build
         cp -f -R ~/main-build/_build $GITHUB_WORKSPACE/main/agda/_build
