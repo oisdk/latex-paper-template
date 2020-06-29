@@ -28,7 +28,7 @@ jobs:
           ~/.cabal/store
           ~/.cabal/bin
           dist-newstyle
-        key: cabal-${{ runner.os }}-${{ matrix.ghc-ver }}-${{ matrix.cabal-ver }}-${{ matrix.agda-ref }}
+        key: ${{ runner.os }}-${{ matrix.ghc-ver }}-${{ matrix.cabal-ver }}-${{ matrix.agda-ref }}
 
     - name: Install cabal
       if: steps.cache-cabal.outputs.cache-hit != 'true'
@@ -144,34 +144,33 @@ jobs:
       with:
         path: main
 
-# # Compile Haskell
-#     - uses: actions/cache@v2
-#       name: Cache literate Haskell
-#       id: cache-lhs
-#       with:
-#         path: ~/lhs-build
-#         key: ${{ runner.os }}-${{ matrix.ghc-ver }}-${{ hashFiles('main/haskell/**') }}
+# Compile Haskell
+    - uses: actions/cache@v2
+      name: Cache literate Haskell
+      id: cache-lhs
+      with:
+        path: ~/lhs-build
+        key: ${{ runner.os }}-${{ matrix.ghc-ver }}-${{ hashFiles('main/haskell/**') }}
       
-#     - name: Add literate haskell sty files
-#       run: |
-#         cd main
-#         if [ ! -f "locallhs2TeX.lhs" ]; then
-#             echo "%include polycode.fmt" > "locallhs2TeX.lhs"
-#         fi
-#         if [ ! -f "locallhs2TeX.sty" ]; then
-#             lhs2TeX -o "locallhs2TeX.sty" "locallhs2TeX.lhs"
-#         fi
+    - name: Add literate haskell sty files
+      run: |
+        cd main
+        if [ ! -f "locallhs2TeX.lhs" ]; then
+            echo "%include polycode.fmt" > "locallhs2TeX.lhs"
+        fi
+        if [ ! -f "locallhs2TeX.sty" ]; then
+            lhs2TeX -o "locallhs2TeX.sty" "locallhs2TeX.lhs"
+        fi
         
-#     - name: Compile literate Haskell
-#       if: steps.cache-lhs.outputs.cache-hit != 'true'
-#       run: |
-#         cd main
-#         cd haskell
-#         find . -type f -name '*.lhs' | while read -r code ; do
-#             lhs2tex -o ${code%.lhs}.tex "$code"
-#         done
-#         cd ..
-#         cp -f -R haskell/* ~/lhs-build/
+    - name: Compile literate Haskell
+      if: steps.cache-lhs.outputs.cache-hit != 'true'
+      run: |
+        cd main/haskell
+        find . -type f -name '*.lhs' | while read -r code ; do
+            lhs2Tex -o ${code%.lhs}.tex "$code"
+        done
+        cd ..
+        cp -f -R haskell/* ~/lhs-build/
       
 #     - name: Retrieve literate Haskell
 #       if: steps.cache-lhs.outputs.cache-hit == 'true'
