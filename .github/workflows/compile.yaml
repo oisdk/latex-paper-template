@@ -114,9 +114,14 @@ jobs:
       if: steps.cache-cubical.outputs.cache-hit != 'true'
       run: |
         cd $GITHUB_WORKSPACE/cubical
-        find . -type f -regex '.*\.l?agda' | while read -r code ; do
-          agda $code
-        done
+        agda Codata/Everything.agda
+        agda Core/Everything.agda
+        agda Data/Everything.agda
+        agda Foundations/Everything.agda
+        agda HITs/Everything.agda
+        agda Modalities/Everything.agda
+        agda Relation/Everything.agda
+        agda WithK.agda
         cp -f -r _build/ ~/cubical-build
 
     - name: Retrieve cubical library
