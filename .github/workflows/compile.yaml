@@ -67,36 +67,36 @@ jobs:
 
 # Download and compile Agda libraries
 
-    - name: Checkout agda standard library
-      uses: actions/checkout@v2
-      with:
-        repository: agda/agda-stdlib
-        path: agda-stdlib
-        ref: ${{ matrix.agda-stdlib-ref }}
+#     - name: Checkout agda standard library
+#       uses: actions/checkout@v2
+#       with:
+#         repository: agda/agda-stdlib
+#         path: agda-stdlib
+#         ref: ${{ matrix.agda-stdlib-ref }}
 
-    - name: Cache agda standard library
-      uses: actions/cache@v2
-      id: cache-agda-stdlib
-      with:
-        path: ~/agda-stdlib-build
-        key: ${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.agda-stdlib-ref }}
+#     - name: Cache agda standard library
+#       uses: actions/cache@v2
+#       id: cache-agda-stdlib
+#       with:
+#         path: ~/agda-stdlib-build
+#         key: ${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.agda-stdlib-ref }}
 
-    - name: Compile Agda standard library
-      if: steps.cache-agda-stdlib.outputs.cache-hit != 'true'
-      run: |
-        cd $GITHUB_WORKSPACE/agda-stdlib
-        sh travis/index.sh
-        echo "module Everything where" > src/Everything.agda
-        cat index.agda >> src/Everything.agda
-        agda src/Everything.agda
-        rm src/Everything.agda
-        cp -f -r _build/ ~/agda-stdlib-build
+#     - name: Compile Agda standard library
+#       if: steps.cache-agda-stdlib.outputs.cache-hit != 'true'
+#       run: |
+#         cd $GITHUB_WORKSPACE/agda-stdlib
+#         sh travis/index.sh
+#         echo "module Everything where" > src/Everything.agda
+#         cat index.agda >> src/Everything.agda
+#         agda src/Everything.agda
+#         rm src/Everything.agda
+#         cp -f -r _build/ ~/agda-stdlib-build
 
-    - name: Retrieve Agda standard library
-      if: steps.cache-agda-stdlib.outputs.cache-hit == 'true'
-      run: |
-        mkdir -p agda-stdlib/_build
-        cp -f -r ~/agda-stdlib-build/* agda-stdlib/_build
+#     - name: Retrieve Agda standard library
+#       if: steps.cache-agda-stdlib.outputs.cache-hit == 'true'
+#       run: |
+#         mkdir -p agda-stdlib/_build
+#         cp -f -r ~/agda-stdlib-build/* agda-stdlib/_build
         
     - name: Checkout cubical library
       uses: actions/checkout@v2
@@ -116,13 +116,12 @@ jobs:
       if: steps.cache-cubical.outputs.cache-hit != 'true'
       run: |
         cd $GITHUB_WORKSPACE/cubical
+        find "Cubical/Algebra" "Cubical/Categories" "Cubical/Data" "Cubical/Functions" "Cubical/HITs" "Cubical/Modalities" "Cubical/Relation" "Cubical/Structures" "Cubical/ZCohomology" -type f -name '*.agda' | while read -r code ; do
+          agda $code
+        done
         agda Cubical/Codata/Everything.agda
         agda Cubical/Core/Everything.agda
-        agda Cubical/Data/Everything.agda
         agda Cubical/Foundations/Everything.agda
-        agda Cubical/HITs/Everything.agda
-        agda Cubical/Modalities/Everything.agda
-        agda Cubical/Relation/Everything.agda
         agda Cubical/WithK.agda
         cp -f -r _build/ ~/cubical-build
 
@@ -137,7 +136,7 @@ jobs:
         mkdir -p ~/.agda/
         touch ~/.agda/libraries
         echo "$GITHUB_WORKSPACE/cubical/cubical.agda-lib" >> ~/.agda/libraries
-        echo "$GITHUB_WORKSPACE/agda-stdlib/standard-library.agda-lib" >> ~/.agda/libraries
+#        echo "$GITHUB_WORKSPACE/agda-stdlib/standard-library.agda-lib" >> ~/.agda/libraries
         
 # Download this git repo
     - name: Checkout main
