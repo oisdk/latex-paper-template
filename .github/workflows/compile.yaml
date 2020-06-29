@@ -66,19 +66,7 @@ jobs:
         cabal install --overwrite-policy=always --ghc-options='-O2 +RTS -M6G -RTS' lhs2tex-1.24
 
 # Download and compile Agda libraries
-    - name: Checkout cubical library
-      uses: actions/checkout@v2
-      with:
-        repository: agda/cubical
-        path: cubical
-        ref: ${{ matrix.cubical-ref }}
 
-    - name: Cache cubical library
-      uses: actions/cache@v2
-      id: cache-cubical
-      with:
-        path: ~/cubical-build
-        key: ${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.cubical-ref }}
 
     - name: Checkout agda standard library
       uses: actions/checkout@v2
@@ -115,21 +103,35 @@ jobs:
       run: |
         mkdir -p agda-stdlib/_build
         cp -f -r ~/agda-stdlib-build/* agda-stdlib/_build
+        
+    - name: Checkout cubical library
+      uses: actions/checkout@v2
+      with:
+        repository: agda/cubical
+        path: cubical
+        ref: ${{ matrix.cubical-ref }}
 
-    - name: Compile cubical library
-      if: steps.cache-cubical.outputs.cache-hit != 'true'
-      run: |
-        cd $GITHUB_WORKSPACE/cubical
-        find . -type f -regex '.*\.l?agda' | while read -r code ; do
-          agda $code
-        done
-        cp -f -r _build/ ~/cubical-build
+#     - name: Cache cubical library
+#       uses: actions/cache@v2
+#       id: cache-cubical
+#       with:
+#         path: ~/cubical-build
+#         key: ${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.cubical-ref }}
 
-    - name: Retrieve cubical library
-      if: steps.cache-cubical.outputs.cache-hit == 'true'
-      run: |
-        mkdir -p cubical/_build
-        cp -f -r ~/cubical-build/* cubical/_build
+#     - name: Compile cubical library
+#       if: steps.cache-cubical.outputs.cache-hit != 'true'
+#       run: |
+#         cd $GITHUB_WORKSPACE/cubical
+#         find . -type f -regex '.*\.l?agda' | while read -r code ; do
+#           agda $code
+#         done
+#         cp -f -r _build/ ~/cubical-build
+
+#     - name: Retrieve cubical library
+#       if: steps.cache-cubical.outputs.cache-hit == 'true'
+#       run: |
+#         mkdir -p cubical/_build
+#         cp -f -r ~/cubical-build/* cubical/_build
         
 # Download this git repo
     - name: Checkout main
