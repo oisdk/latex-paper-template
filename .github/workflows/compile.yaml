@@ -197,7 +197,7 @@ jobs:
         echo 'module Everything where' >> Everything
         find . -type f -regex '.*\.l?agda' | cut -c 3- | cut -f1 -d'.' | sed 's/\//\./g' | sed 's/^/open import /' >> Everything
         mv Everything Everything.agda
-        agda --html --html-dir=docs Everything.agda
+        agda --html --html-dir=../docs Everything.agda
         rm Everything.agda
         cd ..
         cp -f -R agda/ ~/main-build/
@@ -219,10 +219,10 @@ jobs:
         path: main/paper.pdf
 
     - name: Move generated pdf in with html
-      run: mv main/paper.pdf main/agda/docs/paper.pdf
+      run: mv main/paper.pdf main/docs/paper.pdf
 
     - name: Deploy html and pdf to github pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: main/agda/docs
+        publish_dir: main/docs
