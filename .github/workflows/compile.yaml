@@ -114,14 +114,14 @@ jobs:
       if: steps.cache-cubical.outputs.cache-hit != 'true'
       run: |
         cd $GITHUB_WORKSPACE/cubical
-        agda Codata/Everything.agda
-        agda Core/Everything.agda
-        agda Data/Everything.agda
-        agda Foundations/Everything.agda
-        agda HITs/Everything.agda
-        agda Modalities/Everything.agda
-        agda Relation/Everything.agda
-        agda WithK.agda
+        agda Cubical/Codata/Everything.agda
+        agda Cubical/Core/Everything.agda
+        agda Cubical/Data/Everything.agda
+        agda Cubical/Foundations/Everything.agda
+        agda Cubical/HITs/Everything.agda
+        agda Cubical/Modalities/Everything.agda
+        agda Cubical/Relation/Everything.agda
+        agda Cubical/WithK.agda
         cp -f -r _build/ ~/cubical-build
 
     - name: Retrieve cubical library
