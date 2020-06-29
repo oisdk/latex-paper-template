@@ -10,8 +10,9 @@ jobs:
 
     strategy:
       matrix:
-        cubical-ref: ["a01973ef7264f9454a40697313a2073c51a6b77a"]
+        cubical-ref: ["v0.2"]
         agda-ref: ["v2.6.1"]
+        agda-stdlib-ref: ["v1.3"]
         ghc-ver: ["8.10.1"]
         cabal-ver: ["3.2"]
 
@@ -58,7 +59,13 @@ jobs:
         touch doc/user-manual.pdf
         cabal install --overwrite-policy=always --ghc-options='-O1 +RTS -M6G -RTS'
 
-# Download and compile cubical library
+    - name: Install lhs2Tex
+      if: steps.cache-cabal.outputs.cache-hit != 'true'
+      run: |
+        cabal update
+        cabal install --overwrite-policy=always --ghc-options='-O2 +RTS -M6G -RTS' lhs2Tex-1.24
+
+# Download and compile Agda libraries
     - name: Checkout cubical library
       uses: actions/checkout@v2
       with:
@@ -73,21 +80,49 @@ jobs:
         path: ~/cubical-build
         key: ${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.cubical-ref }}
 
-    - name: Put cubical library in Agda library list
+    - name: Checkout agda standard library
+      uses: actions/checkout@v2
+      with:
+        repository: agda/agda-stdlib
+        path: agda-stdlib
+        ref: ${{ matrix.agda-stdlib-ref }}
+
+    - name: Cache agda standard library
+      uses: actions/cache@v2
+      id: cache-agda-stdlib
+      with:
+        path: ~/agda-stdlib-build
+        key: ${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.agda-stdlib-ref }}
+
+    - name: Put Agda libraries in Agda library list
       run: |
         mkdir -p ~/.agda/
         touch ~/.agda/libraries
         echo "$GITHUB_WORKSPACE/cubical/cubical.agda-lib" > ~/.agda/libraries
+        echo "$GITHUB_WORKSPACE/agda-stdlib/standard-library.agda-lib" >> ~/.agda/libraries
+
+    - name: Compile Agda standard library
+      if: steps.cache-agda-stdlib.outputs.cache-hit != 'true'
+      run: |
+        cd $GITHUB_WORKSPACE/agda-stdlib
+        find src -type f -regex '.*\.l?agda' | while read -r code ; do
+            agda $code
+        done
+        cp -f -r _build/ ~/agda-stdlib-build
+
+    - name: Retrieve Agda standard library
+      if: steps.cache-agda-stdlib.outputs.cache-hit == 'true'
+      run: |
+        mkdir -p agda-stdlib/_build
+        cp -f -r ~/agda-stdlib-build/* agda-stdlib/_build
 
     - name: Compile cubical library
       if: steps.cache-cubical.outputs.cache-hit != 'true'
       run: |
-        cd $GITHUB_WORKSPACE/cubical
-        agda Cubical/Core/Everything.agda
-        agda Cubical/Data/Everything.agda
-        agda Cubical/Foundations/Everything.agda
-        agda Cubical/HITs/Everything.agda
-        agda Cubical/Relation/Everything.agda
+        cd $GITHUB_WORKSPACE/agda-stdlib
+        find . -type f -regex '.*\.l?agda' | while read -r code ; do
+            agda $code
+        done
         cp -f -r _build/ ~/cubical-build
 
     - name: Retrieve cubical library
@@ -95,6 +130,22 @@ jobs:
       run: |
         mkdir -p cubical/_build
         cp -f -r ~/cubical-build/* cubical/_build
+
+# Haskell LaTeX
+    - name: Compile literate Haskell
+      run: |
+        if [ ! -f "locallhs2TeX.lhs" ]; then
+            echo "%include polycode.fmt" > "locallhs2TeX.lhs"
+        fi
+        if [ ! -f "locallhs2TeX.sty" ]; then
+            lhs2TeX -o "locallhs2TeX.sty" "locallhs2TeX.lhs"
+        fi
+        cd haskell
+        find . -type f -name '*.lhs' | while read -r code ; do
+            dir=$(dirname "$code")
+            file="$dir"/$(basename "$code" .lhs).tex
+            lhs2Tex -o "$dir/$file" "$code"
+        done
 
 # Download and compile main library
     - name: Checkout main
