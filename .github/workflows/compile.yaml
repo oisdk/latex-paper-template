@@ -12,7 +12,7 @@ jobs:
       matrix:
         cubical-ref: ["v0.2"]
         agda-ref: ["v2.6.1"]
-        agda-stdlib-ref: ["v1.3"]
+        agda-stdlib-ref: ["c5f83356b34a29e526008f7840e1f746bb3f6de0"]
         ghc-ver: ["8.10.1"]
         cabal-ver: ["3.2"]
 
