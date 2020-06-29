@@ -171,11 +171,11 @@ jobs:
             lhs2TeX -o ${code%.lhs}.tex "$code"
         done
         cd ..
-        cp -f -R haskell/* ~/lhs-build/
+        cp -f -r haskell/ ~/lhs-build
       
-#     - name: Retrieve literate Haskell
-#       if: steps.cache-lhs.outputs.cache-hit == 'true'
-#       run: cp -f -R ~/lhs-build/* $GITHUB_WORKSPACE/main/haskell
+    - name: Retrieve literate Haskell
+      if: steps.cache-lhs.outputs.cache-hit == 'true'
+      run: cp -f -R ~/lhs-build/* $GITHUB_WORKSPACE/main/haskell
 
 # # Compile Agda
 
