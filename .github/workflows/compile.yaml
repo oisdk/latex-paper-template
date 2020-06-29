@@ -63,7 +63,7 @@ jobs:
       if: steps.cache-cabal.outputs.cache-hit != 'true'
       run: |
         cabal update
-        cabal install --overwrite-policy=always --ghc-options='-O2 +RTS -M6G -RTS' lhs2Tex-1.24
+        cabal install --overwrite-policy=always --ghc-options='-O2 +RTS -M6G -RTS' lhs2tex-1.24
 
 # Download and compile Agda libraries
     - name: Checkout cubical library
