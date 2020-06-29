@@ -86,8 +86,10 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE/agda-stdlib
         sh travis/index.sh
-        mv index.agda src/Everything.agda
-        agda Everything.agda
+        echo "module Everything where" > src/Everything.agda
+        cat index.agda >> src/Everything.agda
+        agda src/Everything.agda
+        rm src/Everything.agda
         cp -f -r _build/ ~/agda-stdlib-build
 
     - name: Retrieve Agda standard library
@@ -135,7 +137,7 @@ jobs:
         mkdir -p ~/.agda/
         touch ~/.agda/libraries
         echo "$GITHUB_WORKSPACE/cubical/cubical.agda-lib" >> ~/.agda/libraries
-#        echo "$GITHUB_WORKSPACE/agda-stdlib/standard-library.agda-lib" >> ~/.agda/libraries
+        echo "$GITHUB_WORKSPACE/agda-stdlib/standard-library.agda-lib" >> ~/.agda/libraries
         
 # Download this git repo
     - name: Checkout main
