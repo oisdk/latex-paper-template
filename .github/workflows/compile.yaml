@@ -59,7 +59,7 @@ jobs:
         touch doc/user-manual.pdf
         cabal install --overwrite-policy=always --ghc-options='-O1 +RTS -M6G -RTS'
 
-    - name: Install lhs2Tex
+    - name: Install lhs2tex
       if: steps.cache-cabal.outputs.cache-hit != 'true'
       run: |
         cabal update
@@ -105,14 +105,9 @@ jobs:
       if: steps.cache-agda-stdlib.outputs.cache-hit != 'true'
       run: |
         cd $GITHUB_WORKSPACE/agda-stdlib
-        cd src
-        touch Everything
-        echo 'module Everything where' >> Everything
-        find . -type f -regex '.*\.l?agda' | cut -c 3- | cut -f1 -d'.' | sed 's/\//\./g' | sed 's/^/open import /' >> Everything
-        mv Everything Everything.agda
-        cd ..
-        agda src/Everything.agda
-        rm src/Everything.agda
+        find src -type f -regex '.*\.l?agda' | while read -r code ; do
+          agda $code
+        done
         cp -f -r _build/ ~/agda-stdlib-build
 
     - name: Retrieve Agda standard library
@@ -125,13 +120,9 @@ jobs:
       if: steps.cache-cubical.outputs.cache-hit != 'true'
       run: |
         cd $GITHUB_WORKSPACE/cubical
-        touch Everything
-        echo '{-# OPTIONS --cubical #-}' >> Everything
-        echo 'module Everything where' >> Everything
-        find . -type f -regex '.*\.l?agda' | cut -c 3- | cut -f1 -d'.' | sed 's/\//\./g' | sed 's/^/open import /' >> Everything
-        mv Everything Everything.agda
-        agda Everything.agda
-        rm Everything.agda
+        find . -type f -regex '.*\.l?agda' | while read -r code ; do
+          agda $code
+        done
         cp -f -r _build/ ~/cubical-build
 
     - name: Retrieve cubical library
@@ -147,9 +138,8 @@ jobs:
       with:
         path: ~/lhs-build
         key: ${{ runner.os }}-${{ matrix.ghc-ver }}-${{ hashFiles('main/haskell/**') }}
-          
-    - name: Compile literate Haskell
-      if: steps.cache-lhs.outputs.cache-hit != 'true'
+      
+    - name: Add literate haskell sty files
       run: |
         cd main
         if [ ! -f "locallhs2TeX.lhs" ]; then
@@ -158,11 +148,14 @@ jobs:
         if [ ! -f "locallhs2TeX.sty" ]; then
             lhs2TeX -o "locallhs2TeX.sty" "locallhs2TeX.lhs"
         fi
+        
+    - name: Compile literate Haskell
+      if: steps.cache-lhs.outputs.cache-hit != 'true'
+      run: |
+        cd main
         cd haskell
         find . -type f -name '*.lhs' | while read -r code ; do
-            dir=$(dirname "$code")
-            file="$dir"/$(basename "$code" .lhs).tex
-            lhs2Tex -o "$dir/$file" "$code"
+            lhs2tex -o ${code%.lhs}.tex "$code"
         done
         cd ..
         cp -f -R haskell/* ~/lhs-build/
@@ -202,7 +195,12 @@ jobs:
         find . -type f -name '*.lagda' | while read -r code ; do
             agda --latex --latex-dir=. $code
         done
-        agda --html --html-dir=docs README.agda
+        echo '{-# OPTIONS --cubical --safe #-}' > Everything
+        echo 'module Everything where' >> Everything
+        find . -type f -regex '.*\.l?agda' | cut -c 3- | cut -f1 -d'.' | sed 's/\//\./g' | sed 's/^/open import /' >> Everything
+        mv Everything Everything.agda
+        agda --html --html-dir=docs Everything.agda
+        rm Everything.agda
         cd ..
         cp -f -R agda/ ~/main-build/
 
