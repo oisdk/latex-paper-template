@@ -182,61 +182,61 @@ jobs:
       if: steps.cache-lhs.outputs.cache-hit == 'true'
       run: cp -f -R ~/lhs-build/* $GITHUB_WORKSPACE/main/haskell
 
-# # Compile Agda
+# Compile Agda
 
-#     - uses: actions/cache@v2
-#       name: Cache agda code
-#       id: cache-agda
-#       with:
-#         path: ~/main-build
-#         key: html-and-tex-${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.agda-stdlib-ref }}-${{ matrix.cubical-ref }}-${{ hashFiles('main/agda/**') }}
-#         restore-keys: html-and-tex-${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.agda-stdlib-ref }}-${{ matrix.cubical-ref }}-
+    - uses: actions/cache@v2
+      name: Cache agda code
+      id: cache-agda
+      with:
+        path: ~/main-build
+        key: html-and-tex-${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.agda-stdlib-ref }}-${{ matrix.cubical-ref }}-${{ hashFiles('main/agda/**') }}
+        restore-keys: html-and-tex-${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.agda-stdlib-ref }}-${{ matrix.cubical-ref }}-
 
-#     - name: Retrieve main library
-#       if: steps.cache-agda.outputs.cache-hit == 'true'
-#       run: cp -f -R ~/main-build/* $GITHUB_WORKSPACE/main/agda
+    - name: Retrieve main library
+      if: steps.cache-agda.outputs.cache-hit == 'true'
+      run: cp -f -R ~/main-build/* $GITHUB_WORKSPACE/main/agda
 
-#     - name: Compile main library
-#       if: steps.cache-agda.outputs.cache-hit != 'true'
-#       run: |
-#         mkdir -p ~/main-build/_build
-#         cp -f -R ~/main-build/_build $GITHUB_WORKSPACE/main/agda/_build
-#         rm -r ~/main-build
-#         sudo apt-get install texlive-binaries
-#         cd main/agda
-#         find . -type f -name '*.lagda' | while read -r code ; do
-#             agda --latex --latex-dir=. $code
-#         done
-#         echo '{-# OPTIONS --cubical --safe #-}' > Everything
-#         echo 'module Everything where' >> Everything
-#         find . -type f -regex '.*\.l?agda' | cut -c 3- | cut -f1 -d'.' | sed 's/\//\./g' | sed 's/^/open import /' >> Everything
-#         mv Everything Everything.agda
-#         agda --html --html-dir=../docs Everything.agda
-#         rm Everything.agda
-#         cd ..
-#         cp -f -R agda/ ~/main-build/
+    - name: Compile main library
+      if: steps.cache-agda.outputs.cache-hit != 'true'
+      run: |
+        mkdir -p ~/main-build/_build
+        cp -f -R ~/main-build/_build $GITHUB_WORKSPACE/main/agda/_build
+        rm -r ~/main-build
+        sudo apt-get install texlive-binaries
+        cd main/agda
+        find . -type f -name '*.lagda' | while read -r code ; do
+            agda --latex --latex-dir=. $code
+        done
+        echo '{-# OPTIONS --cubical --safe #-}' > Everything
+        echo 'module Everything where' >> Everything
+        find . -type f -regex '.*\.l?agda' | cut -c 3- | cut -f1 -d'.' | sed 's/\//\./g' | sed 's/^/open import /' >> Everything
+        mv Everything Everything.agda
+        agda --html --html-dir=../docs Everything.agda
+        rm Everything.agda
+        cd ..
+        cp -f -R agda/ ~/main-build/
 
-# # Compile pdf
-#     - name: Remove .latexmkrc
-#       run: rm main/.latexmkrc
+# Compile pdf
+    - name: Remove .latexmkrc
+      run: rm main/.latexmkrc
 
-#     - name: Compile latex
-#       uses: xu-cheng/latex-action@v2
-#       with:
-#         working_directory: main
-#         root_file: paper.tex
+    - name: Compile latex
+      uses: xu-cheng/latex-action@v2
+      with:
+        working_directory: main
+        root_file: paper.tex
 
-#     - name: Upload generated pdf
-#       uses: actions/upload-artifact@v2
-#       with:
-#         name: paper
-#         path: main/paper.pdf
+    - name: Upload generated pdf
+      uses: actions/upload-artifact@v2
+      with:
+        name: paper
+        path: main/paper.pdf
 
-#     - name: Move generated pdf in with html
-#       run: mv main/paper.pdf main/docs/paper.pdf
+    - name: Move generated pdf in with html
+      run: mv main/paper.pdf main/docs/paper.pdf
 
-#     - name: Deploy html and pdf to github pages
-#       uses: peaceiris/actions-gh-pages@v3
-#       with:
-#         github_token: ${{ secrets.GITHUB_TOKEN }}
-#         publish_dir: main/docs
+    - name: Deploy html and pdf to github pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: main/docs
