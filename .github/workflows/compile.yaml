@@ -65,7 +65,7 @@ jobs:
         cabal update
         cabal install --overwrite-policy=always --ghc-options='-O2 +RTS -M6G -RTS' lhs2tex-1.24
 
-Download and compile Agda libraries
+# Download and compile Agda libraries
 
     - name: Checkout agda standard library
       uses: actions/checkout@v2
