@@ -165,9 +165,10 @@ jobs:
     - name: Compile literate Haskell
       if: steps.cache-lhs.outputs.cache-hit != 'true'
       run: |
-        cd main/haskell
+        cd main
+        cd haskell
         find . -type f -name '*.lhs' | while read -r code ; do
-            lhs2Tex -o ${code%.lhs}.tex "$code"
+            lhs2Tex -o "${code%.lhs}.tex" "$code"
         done
         cd ..
         cp -f -R haskell/* ~/lhs-build/
