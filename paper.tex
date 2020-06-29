@@ -4,12 +4,6 @@
 \usepackage{locallhs2TeX}
 \renewcommand{\Varid}[1]{\mathit{#1}}
 \renewcommand{\Conid}[1]{\textcolor{OliveGreen}{\textsf{#1}}}
-\usepackage[mono=false]{libertine}
-
-\usepackage[displaymath,textmath]{preview}
-\let\oldhscode\hscode
-\def\hscode{\nopreview\oldhscode}
-
 \begin{document}
 \ExecuteMetaData[agda/Example.tex]{example}
 \ExecuteMetaData[haskell/Example.tex]{example}
