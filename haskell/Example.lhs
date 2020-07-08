@@ -1,5 +1,5 @@
 %include polycode.fmt
-%options ghci
+%options ghci -package lean-peano
 
 %subst keyword a = "\textcolor{BlueViolet}{\textbf{" a "}}"
 \begin{code}
