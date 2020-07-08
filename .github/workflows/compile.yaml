@@ -186,7 +186,7 @@ jobs:
         cd main
         cd haskell
 
-        # cabal v2-build
+        cabal build
 
         find . -type f -name '*.lhs' | while read -r code ; do
             lhs2TeX -o ${code%.lhs}.tex "$code"
