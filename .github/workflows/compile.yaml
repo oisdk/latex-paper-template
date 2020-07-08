@@ -59,19 +59,19 @@ jobs:
       if: steps.cache-cabal.outputs.cache-hit != 'true'
       run: |
         cabal update
-        cabal install --ghc-options='-O2 +RTS -M6G -RTS' alex-3.2.5
-        cabal install --ghc-options='-O2 +RTS -M6G -RTS' happy-1.19.12
+        cabal install --overwrite-policy=always --ghc-options='-O2 +RTS -M6G -RTS' alex-3.2.5
+        cabal install --overwrite-policy=always --ghc-options='-O2 +RTS -M6G -RTS' happy-1.19.12
         cd agda
         mkdir -p doc
         touch doc/user-manual.pdf
-        cabal install --ghc-options='-O1 +RTS -M6G -RTS'
+        cabal install --overwrite-policy=always --ghc-options='-O1 +RTS -M6G -RTS'
 
 # Install lhs2tex
     - name: Install lhs2tex
       if: steps.cache-cabal.outputs.cache-hit != 'true'
       run: |
         cabal update
-        cabal install --ghc-options='-O2 +RTS -M6G -RTS' lhs2tex-1.24
+        cabal install --overwrite-policy=always --ghc-options='-O2 +RTS -M6G -RTS' lhs2tex-1.24
 
 # Download and compile Agda libraries
     - name: Checkout Agda standard library
