@@ -249,9 +249,13 @@ agda/agda.sty
 
 # haskell
 haskell/**/*.tex
+haskell/dist-newstyle/*
 *.hi
 *.o
 
 .DS_Store
 locallhs2TeX.lhs
 locallhs2TeX.sty
+
+
+paper.pdf
