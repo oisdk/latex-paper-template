@@ -19,6 +19,8 @@ jobs:
     steps:
 
 # Install GHC & Cabal
+    - run: echo "::group::Install GHC and Cabal"
+
     - uses: actions/cache@v2
       name: Cache cabal packages
       id: cache-cabal
@@ -39,6 +41,8 @@ jobs:
 
     - name: Put cabal programs in PATH
       run: echo "::add-path::~/.cabal/bin"
+
+    - run: echo "::endgroup::"
 
 # Install Agda
     - name: Download Agda from github
