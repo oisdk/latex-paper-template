@@ -1,7 +1,7 @@
 %include polycode.fmt
+%subst keyword a = "\textcolor{BlueViolet}{\textbf{" a "}}"
 %options ghci -package lean-peano
 
-%subst keyword a = "\textcolor{BlueViolet}{\textbf{" a "}}"
 \begin{code}
 module Example where
 
@@ -16,3 +16,4 @@ example = S (S (S Z))
 %<*calc-example>
 \eval{example}
 %</calc-example>
+
