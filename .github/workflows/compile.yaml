@@ -198,9 +198,7 @@ jobs:
 
     - name: Compile main library
       if: steps.cache-agda.outputs.cache-hit != 'true'
-      run: | 
-        chmod +x scripts/github-compile-local-agda.sh
-        sh scripts/github-compile-local-agda.sh
+      run: sh scripts/github-compile-local-agda.sh
 
 # Compile pdf
     - name: Remove .latexmkrc
