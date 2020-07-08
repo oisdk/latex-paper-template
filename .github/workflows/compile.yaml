@@ -18,7 +18,7 @@ jobs:
 
     steps:
 
-# Install Agda
+# Install GHC & Cabal
     - uses: actions/cache@v2
       name: Cache cabal packages
       id: cache-cabal
@@ -30,7 +30,7 @@ jobs:
           dist-newstyle
         key: ${{ runner.os }}-${{ matrix.ghc-ver }}-${{ matrix.cabal-ver }}-${{ matrix.agda-ref }}
 
-    - name: Install cabal
+    - name: Install ghc and cabal
       if: steps.cache-cabal.outputs.cache-hit != 'true'
       uses: actions/setup-haskell@v1.1
       with:
@@ -40,6 +40,7 @@ jobs:
     - name: Put cabal programs in PATH
       run: echo "::add-path::~/.cabal/bin"
 
+# Install Agda
     - name: Download Agda from github
       if: steps.cache-cabal.outputs.cache-hit != 'true'
       uses: actions/checkout@v2
@@ -59,6 +60,7 @@ jobs:
         touch doc/user-manual.pdf
         cabal install --overwrite-policy=always --ghc-options='-O1 +RTS -M6G -RTS'
 
+# Install lhs2tex
     - name: Install lhs2tex
       if: steps.cache-cabal.outputs.cache-hit != 'true'
       run: |
@@ -66,22 +68,21 @@ jobs:
         cabal install --overwrite-policy=always --ghc-options='-O2 +RTS -M6G -RTS' lhs2tex-1.24
 
 # Download and compile Agda libraries
-
-    - name: Checkout agda standard library
+    - name: Checkout Agda standard library
       uses: actions/checkout@v2
       with:
         repository: agda/agda-stdlib
         path: agda-stdlib
         ref: ${{ matrix.agda-stdlib-ref }}
 
-    - name: Cache agda standard library
+    - name: Cache Agda standard library
       uses: actions/cache@v2
       id: cache-agda-stdlib
       with:
         path: ~/agda-stdlib-build
         key: ${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.agda-stdlib-ref }}
 
-    - name: Compile Agda standard library
+    - name: Cache miss (Agda standard library); compile Agda standard library
       if: steps.cache-agda-stdlib.outputs.cache-hit != 'true'
       run: |
         cd $GITHUB_WORKSPACE/agda-stdlib
@@ -97,7 +98,7 @@ jobs:
         rm src/Everything.agda
         cp -f -r _build/ ~/agda-stdlib-build
 
-    - name: Retrieve Agda standard library
+    - name: Cache hit (Agda standard library); retrieve Agda standard library
       if: steps.cache-agda-stdlib.outputs.cache-hit == 'true'
       run: |
         mkdir -p agda-stdlib/_build
@@ -117,7 +118,7 @@ jobs:
         path: ~/cubical-build
         key: ${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.cubical-ref }}
 
-    - name: Compile cubical library
+    - name: Cache miss (cubical); compile cubical library
       if: steps.cache-cubical.outputs.cache-hit != 'true'
       run: |
         cd $GITHUB_WORKSPACE/cubical
@@ -130,7 +131,7 @@ jobs:
         agda Cubical/WithK.agda
         cp -f -r _build/ ~/cubical-build
 
-    - name: Retrieve cubical library
+    - name: Cache hit (cubical); retrieve cubical library
       if: steps.cache-cubical.outputs.cache-hit == 'true'
       run: |
         mkdir -p cubical/_build
@@ -167,7 +168,7 @@ jobs:
             lhs2TeX -o "locallhs2TeX.sty" "locallhs2TeX.lhs"
         fi
         
-    - name: Compile literate Haskell
+    - name: Cache miss (local Haskell); compile local Haskell
       if: steps.cache-lhs.outputs.cache-hit != 'true'
       run: |
         cd main
@@ -178,40 +179,43 @@ jobs:
         cd ..
         cp -f -r haskell/ ~/lhs-build
       
-    - name: Retrieve literate Haskell
+    - name: Cache hit (local Haskell); retrieve local Haskell
       if: steps.cache-lhs.outputs.cache-hit == 'true'
       run: cp -f -R ~/lhs-build/* $GITHUB_WORKSPACE/main/haskell
 
 # Compile Agda
 
     - uses: actions/cache@v2
-      name: Cache agda code
+      name: Cache local Agda
       id: cache-agda
       with:
         path: ~/main-build
         key: html-and-tex-${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.agda-stdlib-ref }}-${{ matrix.cubical-ref }}-${{ hashFiles('main/agda/**') }}
         restore-keys: html-and-tex-${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.agda-stdlib-ref }}-${{ matrix.cubical-ref }}-
 
-    - name: Retrieve main library
+    - name: Cache hit (local Agda); retrieve local Agda
       if: steps.cache-agda.outputs.cache-hit == 'true'
       run: cp -f -R ~/main-build/* $GITHUB_WORKSPACE/main/agda
 
-    - name: Compile main library
+    - name: Cache miss (local Agda); compile local Agda
       if: steps.cache-agda.outputs.cache-hit != 'true'
       run: |
         mkdir -p ~/main-build/_build
-        cp -f -R ~/main-build/_build $GITHUB_WORKSPACE/main/agda/_build
+        cp -f -R ~/main-build/_build main/agda/_build
         rm -r ~/main-build
-        sudo apt-get install texlive-binaries
+        
         cd main/agda
-        find . -type f -name '*.lagda' | while read -r code ; do
-            agda --latex --latex-dir=. $code
-        done
         echo 'module Everything where' > Everything
         find . -type f -regex '.*\.l?agda' | cut -c 3- | cut -f1 -d'.' | sed 's/\//\./g' | sed 's/^/open import /' >> Everything
         mv Everything Everything.agda
         agda --html --html-dir=docs Everything.agda
         rm Everything.agda
+        
+        sudo apt-get install texlive-binaries
+        find . -type f -name '*.lagda' | while read -r code ; do
+            agda --latex --latex-dir=. $code
+        done
+
         cd ..
         cp -f -R agda/ ~/main-build/
 
