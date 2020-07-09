@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 withcode=$1
 nocode=${withcode#"haskell/"}
 cd haskell || exit
