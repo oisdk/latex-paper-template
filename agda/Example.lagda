@@ -6,5 +6,7 @@ module Example where
 %<*example>
 \begin{code}
 data ⊥ : Set where
+
+record ⊤ : Set where constructor tt
 \end{code}
 %</example>
