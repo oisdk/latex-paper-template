@@ -11,10 +11,10 @@ jobs:
     strategy:
       matrix:
         cubical-ref: ["v0.2"]
-        agda-ref: ["v2.6.1"]
+        agda-ref: ["v2.6.1.1"]
         agda-stdlib-ref: ["v1.3"]
-        ghc-ver: ["8.10.1"]
-        cabal-ver: ["3.2"]
+        ghc-ver: ["8.10.2"]
+        cabal-ver: ["3.4.0.0"]
 
     steps:
 
@@ -38,13 +38,13 @@ jobs:
         restore-keys: ${{ runner.os }}-${{ matrix.ghc-ver }}-${{ matrix.cabal-ver }}-${{ matrix.agda-ref }}
 
     - name: Install ghc and cabal
-      uses: actions/setup-haskell@v1.1
+      uses: actions/setup-haskell@v1.1.3
       with:
         ghc-version: ${{ matrix.ghc-ver }}
         cabal-version: ${{ matrix.cabal-ver }}
 
     - name: Put cabal programs in PATH
-      run: echo "::add-path::~/.cabal/bin"
+      run: echo "~/.cabal/bin" >> $GITHUB_PATH
 
 # Install Agda
     - name: Download Agda from github

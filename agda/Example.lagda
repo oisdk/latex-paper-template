@@ -1,4 +1,5 @@
 \begin{code}
+{-# OPTIONS --without-K #-}
 module Example where
 \end{code}
 
