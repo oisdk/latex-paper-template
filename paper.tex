@@ -1,11 +1,7 @@
-\documentclass{article}
-\usepackage{catchfilebetweentags}
-\input{agda}
-\usepackage{locallhs2TeX}
-\renewcommand{\Varid}[1]{\mathit{#1}}
-\renewcommand{\Conid}[1]{\textcolor{OliveGreen}{\textsf{#1}}}
+\input{preamble}
 \begin{document}
 \ExecuteMetaData[agda/Example.tex]{example}
 \ExecuteMetaData[haskell/Example.tex]{example}
 \ExecuteMetaData[haskell/Example.tex]{calc-example}
+
 \end{document}

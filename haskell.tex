@@ -1,37 +1,59 @@
 % load this file after agda.tex and locallhs2TeX
 % also needs amsmath
 
-\newcommand\hbind{%
-  \ensuremath{\gg\mkern-5.5mu=}%
-}
-\newcommand\hap{%
-  \ensuremath{\mathbin{<\mkern-9mu*\mkern-9mu>}}%
-}
-\newcommand\halt{%
-  \ensuremath{\mathbin{<\mkern-5mu\vert\mkern-5mu>}}%
-}
-\newcommand\hfmap{%
-  \ensuremath{\mathbin{<\mkern-6mu\$\mkern-6mu>}}%
-}
-\newcommand\hcmb{%
-  \ensuremath{\mathbin{\diamond}}%
-}
-\newcommand\hcmbin{%
-  \ensuremath{\mathbin{\diamond\mkern-7.4mu\rtimes}}%
-}
-\newcommand\hkcomp{%
-  \ensuremath{\mathbin{<\mkern-10mu=\mkern-7mu<}}
-}
-\newcommand\hforall{%
-  \ensuremath{\forall}%
-}
-\newcommand\inunique{%
-  \mathrel{\in\mkern-6mu\raisebox{-0.5pt}{!}}
-}
-\newcommand\ind{\mathbin{!}}
+\usepackage{locallhs2TeX}
+
 \renewcommand{\Varid}[1]{\mathit{#1}}
 \renewcommand{\Conid}[1]{\textcolor{OliveGreen}{\textsf{#1}}}
 
+% >>= symbol
+\newcommand\hbind{%
+  \ensuremath{\gg\mkern-5.5mu=}%
+}
+
+% <*> symbol
+\newcommand\hap{%
+  \ensuremath{\mathbin{<\mkern-9mu*\mkern-9mu>}}%
+}
+
+% <|> symbol
+\newcommand\halt{%
+  \ensuremath{\mathbin{<\mkern-5mu\vert\mkern-5mu>}}%
+}
+
+% <$> symbol
+\newcommand\hfmap{%
+  \ensuremath{\mathbin{<\mkern-6mu\$\mkern-6mu>}}%
+}
+
+% <> symbol
+\newcommand\hcmb{%
+  \ensuremath{\mathbin{\diamond}}%
+}
+
+% <>< symbol
+\newcommand\hcmbin{%
+  \ensuremath{\mathbin{\diamond\mkern-7.4mu\rtimes}}%
+}
+
+% <=< symbol
+\newcommand\hkcomp{%
+  \ensuremath{\mathbin{<\mkern-10mu=\mkern-7mu<}}
+}
+
+% forall 
+\newcommand\hforall{%
+  \ensuremath{\forall}%
+}
+
+% in-style e with !
+\newcommand\inunique{%
+  \mathrel{\in\mkern-6mu\raisebox{-0.5pt}{!}}
+}
+
+\newcommand\ind{\mathbin{!}}
+
+% Anamorphism brackets
 \newcommand{\lbparen}{%
   \mathopen{%
     \sbox0{$()$}%
