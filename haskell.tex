@@ -6,24 +6,24 @@
 \renewcommand{\Varid}[1]{\mathit{#1}}
 \renewcommand{\Conid}[1]{\textcolor{OliveGreen}{\textsf{#1}}}
 
-% >>= symbol
-\newcommand\hbind{%
-  \ensuremath{\gg\mkern-5.5mu=}%
-}
-
 % <*> symbol
 \newcommand\hap{%
-  \ensuremath{\mathbin{<\mkern-9mu*\mkern-9mu>}}%
+  \ensuremath{\varoast}%
 }
 
 % <|> symbol
 \newcommand\halt{%
-  \ensuremath{\mathbin{<\mkern-5mu\vert\mkern-5mu>}}%
+  \ensuremath{\varobar}
 }
 
 % <$> symbol
 \newcommand\hfmap{%
   \ensuremath{\mathbin{<\mkern-6mu\$\mkern-6mu>}}%
+}
+
+% <$ symbol
+\newcommand\hreplace{%
+  \ensuremath{\mathbin{<\mkern-6mu\raisebox{-0.7pt}{\$}}}%
 }
 
 % <> symbol
@@ -83,3 +83,8 @@
     }%
   }%
 }
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "paper"
+%%% End:
