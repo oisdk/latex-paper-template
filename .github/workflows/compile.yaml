@@ -3,6 +3,13 @@ on:
   push:
     branches:
       - master
+    paths-ignore: # Don't trigger this script on changes to the following:
+      - 'old-projects/**' # The old project archive
+      - '**.org'          # Notes
+      - '**.md'           # Notes
+      - '**.markdown'     # Notes
+      - 'haskell/**'      # These two lines say "ignore all files in the 
+      - '!haskell/**.lhs' # haskell directory except lhs files"
 
 jobs:
   build:
@@ -34,8 +41,7 @@ jobs:
           ~/.cabal/store
           ~/.cabal/bin
           dist-newstyle
-        key: ${{ runner.os }}-${{ matrix.ghc-ver }}-${{ matrix.cabal-ver }}-${{ matrix.agda-ref }}-${{ hashFiles('main/haskell/haskell.cabal') }}
-        restore-keys: ${{ runner.os }}-${{ matrix.ghc-ver }}-${{ matrix.cabal-ver }}-${{ matrix.agda-ref }}
+        key: ${{ runner.os }}-${{ matrix.ghc-ver }}-${{ matrix.cabal-ver }}-${{ matrix.agda-ref }}
 
     - name: Install ghc and cabal
       uses: actions/setup-haskell@v1.1.3
@@ -152,14 +158,6 @@ jobs:
         
 
 # Compile Local Haskell
-    - uses: actions/cache@v2
-      name: Cache literate Haskell
-      id: cache-lhs
-      with:
-        path: ~/lhs-build
-        key: ${{ runner.os }}-${{ matrix.ghc-ver }}-${{ hashFiles('main/haskell/**') }}
-        restore-keys: ${{ runner.os }}-${{ matrix.ghc-ver }}-
-
     - name: Add literate haskell sty files
       run: |
         cd main
@@ -170,27 +168,12 @@ jobs:
             lhs2TeX -o "locallhs2TeX.sty" "locallhs2TeX.lhs"
         fi
         
-    - name: Cache miss (local Haskell); compile local Haskell
-      if: steps.cache-lhs.outputs.cache-hit != 'true'
+    - name: Generate tex from literate Haskell
       run: |
-        mkdir -p ~/lhs-build/dist-newstyle
-        cp -f -R ~/lhs-build/dist-newstyle main/haskell/dist-newstyle
-        rm -r ~/lhs-build
-
         cd main/haskell
-
-        cabal install --lib --overwrite-policy=always
-
         find . -type f -name '*.lhs' | while read -r code ; do
             lhs2TeX -o ${code%.lhs}.tex "$code"
         done
-
-        cd ..
-        cp -f -r haskell/ ~/lhs-build
-      
-    - name: Cache hit (local Haskell); retrieve local Haskell
-      if: steps.cache-lhs.outputs.cache-hit == 'true'
-      run: cp -f -R ~/lhs-build/* main/haskell
 
 # Compile Agda
 
@@ -216,6 +199,7 @@ jobs:
         cd main
         ./scripts/generate-everything-agda.sh Everything
         cd agda
+
         agda --html --html-dir=docs Everything.agda
         rm Everything.agda
         
@@ -243,11 +227,18 @@ jobs:
         name: paper
         path: main/paper.pdf
 
-    - name: Move generated pdf in with html
-      run: mv main/paper.pdf main/agda/docs/paper.pdf
+    - name: Make site folder
+      run: mkdir site
+
+    - name: Move generated pdf into site folder
+      run: mv main/paper.pdf site/paper.pdf
+
+    - name: Move agda html into site folder
+      run: mv main/agda/docs site/agda
 
     - name: Deploy html and pdf to github pages
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages@v3.7.1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: main/agda/docs
+        publish_dir: site
+        destination_dir: agda-tex
