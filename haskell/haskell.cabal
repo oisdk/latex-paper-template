@@ -3,14 +3,6 @@ cabal-version:       >=1.10
 name:                haskell
 version:             0.1.0.0
 synopsis:            The local literate haskell code for this paper.
--- description:
--- bug-reports:
--- license:
--- license-file:        LICENSE
--- author:              oisdk
--- maintainer:          mail@doisinkidney.com
--- copyright:
--- category:
 build-type:          Simple
 
 library
