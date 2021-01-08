@@ -11,4 +11,3 @@ example :: Int
 example = 3
 \end{code}
 %</example>
-
