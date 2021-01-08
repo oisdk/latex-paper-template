@@ -1,3 +1,9 @@
+# Location of Compiled files:
+
+* [Haskell code](https://oisdk.github.io/latex-paper-template/haskell/index.html)
+* [Agda code](https://oisdk.github.io/latex-paper-template/agda-tex/agda/Everything.html)
+* [Paper](https://oisdk.github.io/latex-paper-template/agda-tex/paper.pdf)
+
 # LaTeX Cheat Sheet
 
 ## Subfigure
