@@ -1,21 +1,51 @@
 \documentclass{article}
 
+% I prefer this font to the normal one.
+% \usepackage[mono=false]{libertine}
+
+% This package is used later for the agda file.
+% We need to import it here to set the dvipsnames option.
 \usepackage[dvipsnames]{xcolor}
+
+% Tikz
 \usepackage{tikz}
+
+% For some of the operators I define myself I use this package.
 \usepackage{pict2e}
+
+% This package lets us import code snippets into the document.
 \usepackage{catchfilebetweentags}
 
+% Packages with maths symbols.
+\usepackage{amsmath}
 \usepackage{mathtools}
 \usepackage{amssymb}
-\usepackage{mathrsfs}
 \usepackage{turnstile}
-\usepackage{bbm}
-\usepackage[greek, english]{babel}
 \usepackage{stmaryrd}
 \usepackage{latexsym}
-\newcommand\doubleplus{+\kern-1.3ex+\kern0.8ex}
-\newcommand\mdoubleplus{\ensuremath{\mathbin{+\mkern-8mu+}}}
+
+% Theorem environments
+\newtheorem{definition}{Definition}
+
+% Maths fonts
+\usepackage{mathrsfs}
+\usepackage{bbm}
+
+% Needed to typeset Agda's stuff.
+\usepackage[english]{babel}
+
+% Handy package for on-the-fly resizing.
 \usepackage{relsize}
+
+% Does links and stuff.
+% \usepackage{hyperref}
+
+% Citations
+% \usepackage{natbib}
+
+% Multiple figures
+\usepackage{subcaption}
+\usepackage{dblfloatfix}
 
 \input{agda}
 \input{haskell}
