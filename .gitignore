@@ -257,5 +257,6 @@ haskell/dist-newstyle/*
 locallhs2TeX.lhs
 locallhs2TeX.sty
 
-
 paper.pdf
+
+!.dir-locals.el
