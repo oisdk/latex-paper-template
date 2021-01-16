@@ -13,14 +13,14 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     strategy:
       matrix:
         cubical-ref: ["v0.2"]
         agda-ref: ["v2.6.1.1"]
         agda-stdlib-ref: ["v1.3"]
-        ghc-ver: ["8.10.2"]
+        ghc-ver: ["8.10.3"]
         cabal-ver: ["3.4.0.0"]
 
     steps:
