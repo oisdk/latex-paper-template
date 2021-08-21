@@ -5,14 +5,15 @@ on:
       - master
     paths:
       - 'haskell/**'
+      - '.github/workflows/haskell-compile-and-test.yaml'
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
 
     strategy:
       matrix:
-        ghc-ver: ["8.10.3"]
+        ghc-ver: ["9.0.1"]
         cabal-ver: ["3.4.0.0"]
 
     steps:

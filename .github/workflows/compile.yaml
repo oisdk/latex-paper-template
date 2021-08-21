@@ -13,14 +13,13 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
 
     strategy:
       matrix:
-        cubical-ref: ["v0.2"]
-        agda-ref: ["v2.6.1.1"]
-        agda-stdlib-ref: ["v1.3"]
-        ghc-ver: ["8.10.3"]
+        cubical-ref: ["a60b0c6576fac0ba6e181cab75f9f9de2d167f87"]
+        agda-ref: ["v2.6.2"]
+        ghc-ver: ["9.0.1"]
         cabal-ver: ["3.4.0.0"]
 
     steps:
@@ -65,12 +64,12 @@ jobs:
       if: steps.cache-cabal.outputs.cache-hit != 'true'
       run: |
         cabal update
-        cabal install --overwrite-policy=always --ghc-options='-O2 +RTS -M6G -RTS' alex-3.2.5
+        cabal install --overwrite-policy=always --ghc-options='-O2 +RTS -M6G -RTS' alex-3.2.6
         cabal install --overwrite-policy=always --ghc-options='-O2 +RTS -M6G -RTS' happy-1.19.12
         cd agda
         mkdir -p doc
         touch doc/user-manual.pdf
-        cabal install --overwrite-policy=always --ghc-options='-O1 +RTS -M6G -RTS'
+        cabal install --overwrite-policy=always --ghc-options='-O2 +RTS -M6G -RTS' -foptimise-heavily
 
 # Install lhs2tex
     - name: Install lhs2tex
@@ -80,42 +79,6 @@ jobs:
         cabal install --overwrite-policy=always --ghc-options='-O2 +RTS -M6G -RTS' lhs2tex-1.24
 
 # Download and compile Agda libraries
-    - name: Checkout Agda standard library
-      uses: actions/checkout@v2
-      with:
-        repository: agda/agda-stdlib
-        path: agda-stdlib
-        ref: ${{ matrix.agda-stdlib-ref }}
-
-    - name: Cache Agda standard library
-      uses: actions/cache@v2
-      id: cache-agda-stdlib
-      with:
-        path: ~/agda-stdlib-build
-        key: ${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.agda-stdlib-ref }}
-
-    - name: Cache miss (Agda standard library); compile Agda standard library
-      if: steps.cache-agda-stdlib.outputs.cache-hit != 'true'
-      run: |
-        cd $GITHUB_WORKSPACE/agda-stdlib
-        for file in $( find src -name "*.agda" | sort ); do
-          if [[ ! $( head -n 10 $file | grep -m 1 "This module is DEPRECATED" ) ]]; then
-            i=$( echo $file | sed 's/src\/\(.*\)\.agda/\1/' | sed 's/\//\./g' )
-            echo "import $i" >> index.agda;
-          fi
-        done
-        echo "module Everything where" > src/Everything.agda
-        cat index.agda >> src/Everything.agda
-        agda src/Everything.agda
-        rm src/Everything.agda
-        cp -f -r _build/ ~/agda-stdlib-build
-
-    - name: Cache hit (Agda standard library); retrieve Agda standard library
-      if: steps.cache-agda-stdlib.outputs.cache-hit == 'true'
-      run: |
-        mkdir -p agda-stdlib/_build
-        cp -f -r ~/agda-stdlib-build/* agda-stdlib/_build
-        
     - name: Checkout cubical library
       uses: actions/checkout@v2
       with:
@@ -130,32 +93,31 @@ jobs:
         path: ~/cubical-build
         key: ${{ runner.os }}-${{ matrix.agda-ver }}-${{ matrix.cubical-ref }}
 
-    - name: Cache miss (cubical); compile cubical library
+    - name: Put cubical library in Agda library list
+      run: |
+        mkdir -p ~/.agda/
+        touch ~/.agda/libraries
+        echo "$GITHUB_WORKSPACE/cubical/cubical.agda-lib" > ~/.agda/libraries
+
+    - name: Compile cubical library
       if: steps.cache-cubical.outputs.cache-hit != 'true'
       run: |
-        cd cubical
-        find "Cubical/Algebra" "Cubical/Categories" "Cubical/Data" "Cubical/Functions" "Cubical/HITs" "Cubical/Modalities" "Cubical/Relation" "Cubical/Structures" "Cubical/ZCohomology" -type f -name '*.agda' | while read -r code ; do
-          agda $code
-        done
-        agda Cubical/Codata/Everything.agda
+        cd $GITHUB_WORKSPACE/cubical
         agda Cubical/Core/Everything.agda
         agda Cubical/Foundations/Everything.agda
-        agda Cubical/WithK.agda
+        find Cubical/Data -type f -name "*.agda" | while read -r code ; do
+            agda $code
+        done
+        find Cubical/HITs -type f -name "*.agda" | while read -r code ; do
+            agda $code
+        done
         cp -f -r _build/ ~/cubical-build
 
-    - name: Cache hit (cubical); retrieve cubical library
+    - name: Retrieve cubical library
       if: steps.cache-cubical.outputs.cache-hit == 'true'
       run: |
         mkdir -p cubical/_build
         cp -f -r ~/cubical-build/* cubical/_build
-        
-    - name: Put Agda libraries in Agda library list
-      run: |
-        mkdir -p ~/.agda/
-        touch ~/.agda/libraries
-        echo "$GITHUB_WORKSPACE/cubical/cubical.agda-lib" >> ~/.agda/libraries
-        echo "$GITHUB_WORKSPACE/agda-stdlib/standard-library.agda-lib" >> ~/.agda/libraries
-        
 
 # Compile Local Haskell
     - name: Add literate haskell sty files
