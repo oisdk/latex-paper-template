@@ -1,7 +1,15 @@
 \documentclass{article}
 
+\usepackage[dvipsnames]{xcolor}
+\definecolor{AHKeywordColour}    {cmyk}{0.86,0.91,0,0.04}
+\definecolor{AHFunctionColour}   {cmyk}{0.64,0,0.95,0.40}
+\definecolor{AHConstructorColour}{cmyk}{0,0.83,1,0.70}
+\definecolor{AHNumberColour}     {HTML}{A020F0}
+\definecolor{AHStringColour}     {HTML}{B22222}
+
+\PassOptionsToPackage{full}{textcomp}
+
 % I prefer this font to the normal one.
-% \usepackage[mono=false]{libertine}
 
 % This package is used later for the agda file.
 % We need to import it here to set the dvipsnames option.
@@ -9,6 +17,7 @@
 
 % Tikz
 \usepackage{tikz}
+
 
 % For some of the operators I define myself I use this package.
 \usepackage{pict2e}
@@ -39,6 +48,7 @@
 
 % Does links and stuff.
 % \usepackage{hyperref}
+\usepackage{cleveref}
 
 % Citations
 % \usepackage{natbib}
@@ -46,6 +56,13 @@
 % Multiple figures
 \usepackage{subcaption}
 \usepackage{dblfloatfix}
+
+\usepackage[backgroundcolor=Lavender,textwidth=1.15cm]{todonotes}
+\setlength{\marginparwidth}{1.22cm}
+\presetkeys{todonotes}{inline}{}
+\newcommand{\mtodo}[1]{\todo[noinline,noline,size=tiny]{\tiny #1}}
+
+% \PrerenderUnicode{í}
 
 \input{agda}
 \input{haskell}
