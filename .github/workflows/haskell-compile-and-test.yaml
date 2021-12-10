@@ -2,7 +2,7 @@ name: Compile and Test Haskell Code
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'haskell/**'
       - '.github/workflows/haskell-compile-and-test.yaml'
