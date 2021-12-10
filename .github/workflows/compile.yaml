@@ -2,7 +2,7 @@ name: Compile LaTeX and HTML
 on:
   push:
     branches:
-      - master
+      - main
     paths-ignore: # Don't trigger this script on changes to the following:
       - 'old-projects/**' # The old project archive
       - '**.org'          # Notes
